@@ -1,0 +1,36 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+  <div style="text-align:center; margin-top:50px;">
+    <h1 style="color:green;">Payment Successful 🎉</h1>
+    <p>Thank you for your purchase, <strong>{{ order.customer_email }}</strong>.</p>
+    <p>You bought: <strong>{{ order.product.name }}</strong></p>
+    <p>Amount Paid: ₹{{ order.amount }}</p>
+    <p>Quantity Purchased: <span style="font-weight:bold; color:#333;">{{ order.quantity }}</span></p>
+
+    {% if order.product.file %}
+      <h3 style="margin-top:30px;">Download Your Product:</h3>
+      <button onclick="downloadMultiple()" 
+              style="background:#4CAF50; color:white; padding:12px 25px; border:none; border-radius:6px; font-weight:bold; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+        📥 Automatic Download {{ order.quantity }} images
+      </button>
+
+      <script>
+        function downloadMultiple() {
+          const fileUrl = "{{ order.product.file.url }}";
+          const quantity = {{ order.quantity }};
+          for (let i = 0; i < quantity; i++) {
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.download = "file_" + (i+1);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+        }
+      </script>
+    {% else %}
+      <p style="color:red; margin-top:20px;">No file available for download.</p>
+    {% endif %}
+  </div>
+{% endblock %}

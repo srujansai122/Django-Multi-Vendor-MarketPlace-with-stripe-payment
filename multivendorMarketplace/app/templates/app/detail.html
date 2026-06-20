@@ -1,0 +1,95 @@
+{% extends "app/base.html" %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto bg-white rounded-lg shadow-md p-6">
+    {% if product.file %}
+    <img src="{{ product.file.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded">
+    {% endif %}
+
+    <h1 class="text-3xl font-bold text-blue-600 mt-4">{{ product.name }}</h1>
+    <p class="text-gray-700 mt-2">{{ product.description }}</p>
+    <p class="text-xl font-semibold text-green-600 mt-4">₹{{ product.price }}</p>
+
+    <div class="mt-6 flex items-center space-x-3">
+        <button id="decrease"
+            class="bg-gray-300 text-gray-700 px-3 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed">
+            -
+        </button>
+        <input id="quantity" type="number" value="1" min="1"
+            class="w-16 text-center border rounded" readonly>
+        <button id="increase"
+            class="bg-gray-300 text-gray-700 px-3 py-2 rounded">
+            +
+        </button>
+    </div>
+
+    <div class="mt-6">
+        <a id="checkout_button"
+           class="block w-full text-center bg-green-500 text-white font-medium px-5 py-3 rounded-lg shadow-md hover:bg-green-600 transition">
+           Buy Now
+        </a>
+    </div>
+    <div id="myemail">{{request.user.email}}</div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const decreaseBtn = document.getElementById("decrease");
+    const increaseBtn = document.getElementById("increase");
+    const quantityInput = document.getElementById("quantity");
+
+    function updateButtons() {
+        if (parseInt(quantityInput.value) <= 1) {
+            decreaseBtn.disabled = true;
+        } else {
+            decreaseBtn.disabled = false;
+        }
+    }
+
+    increaseBtn.addEventListener("click", () => {
+        quantityInput.value = parseInt(quantityInput.value) + 1;
+        updateButtons();
+    });
+
+    decreaseBtn.addEventListener("click", () => {
+        if (parseInt(quantityInput.value) > 1) {
+            quantityInput.value = parseInt(quantityInput.value) - 1;
+            updateButtons();
+        }
+    });
+
+    updateButtons();
+
+    var stripe = Stripe("{{ pk }}");
+    const checkout_button = document.getElementById("checkout_button");
+
+    checkout_button.addEventListener("click", function () {
+        console.log("clicked");
+
+        var email = document.getElementById("myemail").textContent;
+        var quantity = quantityInput.value;
+
+        if (!email || email.length === 0) {
+            alert("Email not found");
+            return;
+        }
+
+        fetch("{% url 'checkout' id=product.id %}", {
+            method: "POST",
+            body: JSON.stringify({ email: email, quantity: quantity })
+        })
+        .then(response => response.json())
+        .then(session => stripe.redirectToCheckout({ sessionId: session.sessionId }))
+        .then(result => {
+            if (result.error) {
+                alert(result.error.message);
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    });
+</script>
+{% endblock %}

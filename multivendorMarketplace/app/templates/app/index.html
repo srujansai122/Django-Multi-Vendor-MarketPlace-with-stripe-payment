@@ -1,0 +1,36 @@
+{% extends "app/base.html" %}
+
+{% block title %}Marketplace{% endblock %}
+
+{% block content %}
+{% if products %}
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for product in products %}
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-transform hover:scale-105">
+        
+        {% if product.file %}
+        <img src="{{ product.file.url }}" alt="{{ product.name }}" class="w-full h-56 object-cover">
+        {% endif %}
+
+        <div class="p-6 flex flex-col justify-between h-full">
+            <div>
+                <h2 class="text-2xl font-bold text-blue-600">{{ product.name }}</h2>
+                <p class="text-gray-700 mt-3">{{ product.description }}</p>
+                <p class="text-xl font-semibold text-green-600 mt-4">₹{{ product.price }}</p>
+                <div class='flex justify-center'>
+                <a href="{% url 'details' product.id%}"class="inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg shadow hover:bg-blue-700 hover:shadow-lg transition">
+                View Details
+                </a>
+               </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-16 bg-white rounded-lg shadow-md">
+    <h2 class="text-3xl font-bold text-blue-600">No products available</h2>
+    <p class="text-gray-600 mt-4">Please check back soon for new items in our marketplace.</p>
+</div>
+{% endif %}
+{% endblock %}
