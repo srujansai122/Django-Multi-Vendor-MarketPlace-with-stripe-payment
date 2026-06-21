@@ -17,7 +17,9 @@
             <li><a href="{% url 'index' %}" class="hover:text-yellow-300">Home</a></li>
             <li><a href="{% url 'dashboard' %}" class="hover:text-yellow-300">Dashboard</a></li>
             <li><a href="{% url 'purchases' %}" class="hover:text-yellow-300">My Purchases</a></li>
-            <li><a href="{% url 'sales_dashboard' %}" class="hover:text-yellow-300">SalesDashboard</a></li>
+            <li><a href="{% url 'sales_dashboard' %}" class="hover:text-yellow-300">Sales Dashboard</a></li>
+            <li>Welcome! {{request.user}}</li>
+            
             <li>
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
