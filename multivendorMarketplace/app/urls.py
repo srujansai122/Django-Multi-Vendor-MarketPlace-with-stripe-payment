@@ -21,6 +21,7 @@ urlpatterns = [
     ),
     path('invalid',views.invalid,name='invalid'),
     path('my-purchases',views.purchases,name='purchases'),
-    path('sales-dashboard',views.sales_dashboard,name='sales_dashboard')
+    path('sales-dashboard',views.sales_dashboard,name='sales_dashboard'),
+    path('my-orders',views.orders,name='my_orders')
 ]
 

@@ -195,3 +195,8 @@ def sales_dashboard(request):
         'product_sales_sum':product_sales_sum
     }
     return render(request,'app/sales.html',context)
+
+
+def orders(request):
+    orders=OrderDetail.objects.filter(customer_email=request.user.email)
+    return render(request,'app/orders.html',{'orders':orders})
