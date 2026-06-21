@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from .models import Product,OrderDetail
 from django.http import JsonResponse,HttpResponseNotFound
 from django.conf import settings
@@ -6,6 +6,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 import stripe
 from django.urls import reverse
+from .forms import ProductForm 
 
 
 # Create your views here.
@@ -72,3 +73,41 @@ def payment_success_view(request):
 
 def payment_failed_view(request):
     return render(request,'app/payment_failed.html')
+
+
+
+def create_product(request):
+    if request.method=='POST':
+        productForm=ProductForm(request.POST,request.FILES)
+        if productForm.is_valid():
+            new_prodouct=productForm.save()
+            return redirect('index')    
+    productForm=ProductForm()
+    context={
+        'product_form':productForm
+    }
+    return render(request,'app/forms/create_product.html',context)
+
+
+def edit_product(request,id):
+    product=Product.objects.get(id=id)
+    if request.method=='POST':
+        productForm=ProductForm(request.POST,request.FILES,instance=product)
+        if productForm.is_valid():
+            new_prodouct=productForm.save()
+            return redirect('index')    
+    productForm=ProductForm(instance=product)
+    context={
+        'product_form':productForm,
+        'product':product
+    }
+    return render(request,'app/forms/edit_product.html',context)
+
+
+def delete_product(request,id):
+    product=Product.objects.get(id=id)
+    if request.method=='POST':
+        product.delete()
+        return redirect('index')
+    return render(request,'app/forms/delete_product.html',{'product':product})
+    

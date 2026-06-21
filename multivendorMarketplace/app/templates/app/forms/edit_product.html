@@ -1,0 +1,20 @@
+{% extends "app/base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto mt-10 bg-white shadow-lg rounded-lg p-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Edit Product</h1>
+    <form method="post" enctype="multipart/form-data" class="space-y-5">
+        {% csrf_token %}
+        {{ product_form.as_p }}
+        <button type="submit" 
+                class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+            Submit Product
+        </button>
+    </form>
+    <div class='flex justify-center py-2'>
+    <a href="{% url 'delete_product' product.id %}" 
+            class="mt-4 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+            Delete Product
+    </a> 
+    </div> 
+</div>
+{% endblock %}

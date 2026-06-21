@@ -4,8 +4,10 @@
 
 {% block content %}
 <div class="max-w-xl mx-auto bg-white rounded-lg shadow-md p-6">
-    {% if product.file %}
-    <img src="{{ product.file.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded">
+   {% if product.file %}
+        <img src="{{ product.file.url }}" 
+             alt="{{ product.name }}" 
+             class="w-full h-64 object-cover rounded">
     {% endif %}
 
     <h1 class="text-3xl font-bold text-blue-600 mt-4">{{ product.name }}</h1>
@@ -31,7 +33,7 @@
            Buy Now
         </a>
     </div>
-    <div id="myemail">{{request.user.email}}</div>
+    <div id="myemail" hidden>{{request.user.email}}</div>
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
