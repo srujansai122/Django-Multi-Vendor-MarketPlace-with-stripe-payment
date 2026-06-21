@@ -80,7 +80,9 @@ def create_product(request):
     if request.method=='POST':
         productForm=ProductForm(request.POST,request.FILES)
         if productForm.is_valid():
-            new_prodouct=productForm.save()
+            new_prodouct=productForm.save(commit=False)
+            new_prodouct.seller=request.user
+            new_prodouct.save()
             return redirect('index')    
     productForm=ProductForm()
     context={
@@ -91,6 +93,9 @@ def create_product(request):
 
 def edit_product(request,id):
     product=Product.objects.get(id=id)
+    if product.seller != request.user:
+        return redirect('invalid')
+        
     if request.method=='POST':
         productForm=ProductForm(request.POST,request.FILES,instance=product)
         if productForm.is_valid():
@@ -106,6 +111,8 @@ def edit_product(request,id):
 
 def delete_product(request,id):
     product=Product.objects.get(id=id)
+    if product.seller != request.user:
+        return redirect('invalid')
     if request.method=='POST':
         product.delete()
         return redirect('index')
@@ -113,7 +120,7 @@ def delete_product(request,id):
     
     
 def dashboard(request):
-    products=Product.objects.all()
+    products=Product.objects.filter(seller=request.user)
     return render(request,'app/dashboard.html',{'products':products})
 
 
@@ -125,3 +132,5 @@ def register(request):
             return redirect('login')
     return render(request,'app/forms/register.html',{'registration_form':registration_form})
 
+def invalid(request):
+    return render(request,'app/invalid.html')
