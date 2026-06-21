@@ -6,7 +6,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 import stripe
 from django.urls import reverse
-from .forms import ProductForm 
+from .forms import ProductForm ,UserRegistrationForm
 
 
 # Create your views here.
@@ -111,3 +111,17 @@ def delete_product(request,id):
         return redirect('index')
     return render(request,'app/forms/delete_product.html',{'product':product})
     
+    
+def dashboard(request):
+    products=Product.objects.all()
+    return render(request,'app/dashboard.html',{'products':products})
+
+
+def register(request):
+    registration_form=UserRegistrationForm(request.POST or None)
+    if request.method=='POST':
+        if registration_form.is_valid():
+            registration_form.save()
+            return redirect('login')
+    return render(request,'app/forms/register.html',{'registration_form':registration_form})
+

@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('',views.index,name='index'),
     path('product/<int:id>',views.details,name='details'),
@@ -10,5 +11,13 @@ urlpatterns = [
     path('create-product/',views.create_product,name='create_product'),
     path('edit-product/<int:id>',views.edit_product,name='edit_product'),
     path('delete-product/<int:id>',views.delete_product,name='delete_product'),
+    
+    path('dashboard',views.dashboard,name='dashboard'),
+    path('user/register',views.register,name='register'),
+    path('user/login',auth_views.LoginView.as_view(template_name='app/forms/login.html'),name="login"),
+    path('logout',
+        auth_views.LogoutView.as_view(template_name='app/forms/logout.html'),
+        name="logout"
+    ),
 ]
 

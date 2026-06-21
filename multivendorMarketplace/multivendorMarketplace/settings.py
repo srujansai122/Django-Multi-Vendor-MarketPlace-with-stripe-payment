@@ -134,3 +134,5 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY")
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+
+LOGIN_REDIRECT_URL='/'
