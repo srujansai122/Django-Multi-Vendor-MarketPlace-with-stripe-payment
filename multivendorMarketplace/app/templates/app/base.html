@@ -7,25 +7,33 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
-
-    <!-- Navbar -->
-    <nav class="bg-blue-600 text-white px-6 py-4 flex justify-between items-center shadow-md">
-        <div class="flex items-center space-x-3">
-            <img src="https://cdn-icons-png.flaticon.com/128/9425/9425742.png" alt="Marketplace Logo" class="w-8 h-8">
-            <span class="text-2xl font-bold">DigitalMarketPlace</span>
-        </div>
-        <ul class="flex space-x-6 items-center">
+<nav class="bg-blue-600 text-white px-6 py-4 flex justify-between items-center shadow-md">
+    <div class="flex items-center space-x-3">
+        <img src="https://cdn-icons-png.flaticon.com/128/9425/9425742.png" alt="Marketplace Logo" class="w-8 h-8">
+        <span class="text-2xl font-bold">DigitalMarketPlace</span>
+    </div>
+    <ul class="flex space-x-6 items-center">
+        {% if request.user.is_authenticated %}
             <li><a href="{% url 'index' %}" class="hover:text-yellow-300">Home</a></li>
             <li><a href="{% url 'dashboard' %}" class="hover:text-yellow-300">Dashboard</a></li>
-           <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit"
-                    class="bg-yellow-400 text-gray-900 px-3 py-1 rounded hover:bg-yellow-500 transition">
-                Logout
-            </button>
-            </form>
-        </ul>
-    </nav>
+            <li><a href="{% url 'purchases' %}" class="hover:text-yellow-300">My Purchases</a></li>
+            <li><a href="{% url 'sales_dashboard' %}" class="hover:text-yellow-300">SalesDashboard</a></li>
+            <li>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="bg-yellow-400 text-gray-900 px-3 py-1 rounded hover:bg-yellow-500 transition">
+                        Logout
+                    </button>
+                </form>
+            </li>
+        {% else %}
+            <li><a href="{% url 'login' %}" class="hover:text-yellow-300">Login</a></li>
+            <li><a href="{% url 'register' %}" class="hover:text-yellow-300">Register</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
 
     <!-- Main content -->
     <main class="flex-grow container mx-auto px-6 py-8">
